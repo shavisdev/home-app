@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { Package, ChevronRight, Boxes } from 'lucide-react';
+import { Package, ChevronRight, Sparkles } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = { title: 'Home · V&S' };
 import Greeting from '@/components/Greeting';
 import { Package as PackageType } from '@/lib/types';
 
@@ -28,7 +31,7 @@ export default function DashboardPage() {
           {/* Sunrise warmth gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-amber-100/70 via-orange-50/40 to-amber-50/20 dark:from-amber-950/50 dark:via-amber-900/20 dark:to-stone-900/10" />
           {/* Radial warm glow from top-left */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgba(251,191,36,0.18),transparent)] dark:bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgba(251,191,36,0.10),transparent)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgba(251,191,36,0.18),transparent)] dark:bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgba(251,191,36,0.10),transparent)] animate-breathe" />
           <div className="relative px-6 pt-7 pb-6 flex items-start justify-between">
             <Greeting />
             {/* V·S monogram — bespoke personal accent */}
@@ -78,13 +81,13 @@ export default function DashboardPage() {
         </Link>
 
         {/* Future sections placeholder */}
-        <div className="flex items-center gap-5 p-5 rounded-2xl border border-dashed border-[var(--card-border)] opacity-40 cursor-default">
-          <div className="w-12 h-12 rounded-xl bg-[var(--muted-bg)] flex items-center justify-center flex-shrink-0">
-            <Boxes className="w-6 h-6 text-[var(--muted)]" />
+        <div className="flex items-center gap-5 p-5 rounded-2xl border border-dashed border-[var(--card-border)] opacity-40 cursor-default select-none">
+          <div className="w-12 h-12 rounded-xl bg-amber-500/8 border border-amber-500/15 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-5 h-5 text-amber-500" />
           </div>
           <div>
-            <h2 className="font-medium text-[var(--foreground)] text-sm">More sections coming</h2>
-            <p className="text-xs text-[var(--muted)] mt-0.5">Groceries, calendar, and more</p>
+            <h2 className="font-medium text-[var(--foreground)] text-sm">Coming soon</h2>
+            <p className="text-xs text-[var(--muted)] mt-0.5">Groceries, calendar &amp; more</p>
           </div>
         </div>
       </div>

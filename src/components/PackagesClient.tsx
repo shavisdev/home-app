@@ -191,21 +191,22 @@ function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: b
 }
 
 function EmptyState({ type }: { type: Tab }) {
+  const isActive = type === 'active';
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center px-4">
-      <div className="w-16 h-16 rounded-2xl bg-[var(--muted-bg)] border border-[var(--card-border)] flex items-center justify-center mb-4 shadow-sm">
-        {type === 'active' ? (
-          <Inbox className="w-7 h-7 text-[var(--muted)]" />
+    <div className={`flex flex-col items-center justify-center py-16 text-center px-4 rounded-2xl ${isActive ? 'bg-amber-500/5 border border-amber-500/12 dark:bg-amber-500/8' : ''}`}>
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-sm ${isActive ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-[var(--muted-bg)] border border-[var(--card-border)]'}`}>
+        {isActive ? (
+          <Package className="w-7 h-7 text-amber-500" />
         ) : (
           <Archive className="w-7 h-7 text-[var(--muted)]" />
         )}
       </div>
       <h3 className="font-semibold text-[var(--foreground)] mb-1.5">
-        {type === 'active' ? 'Nothing in transit' : 'No archived packages'}
+        {isActive ? 'No packages in transit' : 'No archived packages'}
       </h3>
       <p className="text-sm text-[var(--muted)] max-w-xs leading-relaxed">
-        {type === 'active'
-          ? "All clear — nothing on its way right now."
+        {isActive
+          ? "When something ships, it'll appear here."
           : 'Picked up and delivered packages will appear here.'}
       </p>
     </div>

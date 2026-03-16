@@ -67,6 +67,12 @@ body {
   100% { transform: scale(1); }
 }
 
+@keyframes breathe {
+  0%, 100% { opacity: 0.8; }
+  50%      { opacity: 1.0; }
+}
+
+.animate-breathe    { animation: breathe 4s ease-in-out infinite; }
 .animate-shake      { animation: shake 0.42s ease-in-out; }
 .animate-fade-in    { animation: fade-in 0.4s ease-out both; }
 .animate-slide-up   { animation: slide-up 0.45s ease-out both; }

@@ -1,9 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import type { Metadata } from 'next';
 import PackagesClient from '@/components/PackagesClient';
 import { Package } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+export const metadata: Metadata = { title: 'Packages · V&S' };
 
 function readPackages(filename: string): Package[] {
   try {
