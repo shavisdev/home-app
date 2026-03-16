@@ -54,8 +54,8 @@ export default function AppNav() {
         <div className="flex items-stretch safe-area-inset-bottom">
           {/* VS avatar — bottom-left household mark */}
           <div className="flex flex-col items-center justify-center gap-1 pl-4 pr-3 py-3 min-h-[56px] select-none">
-            <div className="w-7 h-7 rounded-full bg-amber-500/12 border border-amber-500/25 flex items-center justify-center">
-              <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 tracking-tight">VS</span>
+            <div className="w-8 h-8 rounded-full bg-amber-500/12 border border-amber-500/25 flex items-center justify-center">
+              <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 tracking-tight">VS</span>
             </div>
           </div>
           <div className="flex flex-1">

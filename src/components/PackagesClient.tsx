@@ -82,12 +82,12 @@ function getStatusConfig(status: string) {
   );
 }
 
-function PackageCard({ pkg }: { pkg: PackageType }) {
+function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: boolean }) {
   const statusCfg = getStatusConfig(pkg.status);
   const StatusIcon = statusCfg.icon;
 
   return (
-    <div className="relative bg-[var(--card)] border border-[var(--card-border)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className={`relative border rounded-2xl overflow-hidden transition-shadow duration-200 ${archived ? 'bg-[var(--card)]/60 border-[var(--card-border)]/70 opacity-80 shadow-none' : 'bg-[var(--card)] border-[var(--card-border)] shadow-sm hover:shadow-md'}`}>
       {/* Status accent stripe */}
       <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${statusCfg.dot}`} />
 
@@ -96,9 +96,11 @@ function PackageCard({ pkg }: { pkg: PackageType }) {
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1.5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">
-                {pkg.retailer}
-              </span>
+              {pkg.retailer && pkg.retailer.toLowerCase() !== 'unknown' && (
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">
+                  {pkg.retailer}
+                </span>
+              )}
               {pkg.picked_up && (
                 <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   <BadgeCheck className="w-3 h-3" />
@@ -281,9 +283,19 @@ export default function PackagesClient({ active, archived }: Props) {
                 style={{ animationDelay: `${i * 0.06}s` }}
                 className="animate-slide-up"
               >
-                <PackageCard pkg={pkg} />
+                <PackageCard pkg={pkg} archived={tab === 'archived'} />
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Active tab footer — soft empty-state hint when list is short */}
+        {tab === 'active' && packages.length > 0 && (
+          <div className="mt-8 flex flex-col items-center gap-2 select-none">
+            <div className="w-full h-px bg-[var(--card-border)]/60" />
+            <p className="text-xs text-[var(--muted)] opacity-50 pt-1">
+              All caught up · Powered by Gandalf 🧙
+            </p>
           </div>
         )}
       </div>
