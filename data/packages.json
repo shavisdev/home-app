@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-03-16T06:40:00Z",
-  "last_scanned_official": "2026-03-16T06:40:00Z",
-  "last_scanned_personal": "2026-03-16T06:40:00Z",
+  "last_updated": "2026-03-16T13:00:00Z",
+  "last_scanned_official": "2026-03-16T13:00:00Z",
+  "last_scanned_personal": "2026-03-16T13:00:00Z",
   "packages": [
     {
       "id": "pkg_20260311_kegg_tracker",
@@ -23,9 +23,57 @@
       "picked_up": false,
       "picked_up_at": null,
       "live_status": "On the Way — Bayonne, NJ (03/16/2026 12:22 AM). Est. delivery: Wednesday, March 18 by 9:00 PM",
-      "live_status_checked_at": "2026-03-16T06:51:00Z",
+      "live_status_checked_at": "2026-03-16T13:00:00Z",
       "flags": [],
-      "notes": "Shipped March 11 from Phoenix, AZ via UPS Ground Saver. Currently in Bayonne, NJ — very close."
+      "notes": "Shipped March 11 from Phoenix, AZ via UPS Ground Saver. Last scan: in Bayonne, NJ. UPS page is JS-rendered; live_status retained from previous check. Est. delivery Wed March 18."
+    },
+    {
+      "id": "pkg_20260315_amazon_pureleaf",
+      "retailer": "Amazon",
+      "description": "Pure Leaf Iced Tea, Unsweetened 3 Flavor Variety Pack, Zero Sugar & Zero Calories, 18.5 Fl Oz Bottles (Pack of 12)",
+      "order_number": "112-6989672-7639456",
+      "order_date": "2026-03-15T00:06:00Z",
+      "email_account": "official",
+      "tracking_number": null,
+      "carrier": "Amazon",
+      "tracking_url": "https://www.amazon.com/progress-tracker/package?_encoding=UTF8&orderId=112-6989672-7639456&packageIndex=0&shipmentId=PfRMg2bz6",
+      "status": "awaiting_pickup",
+      "pickup_location": "concierge",
+      "pickup_code": null,
+      "link_confidence": "high",
+      "retailer_delivered_at": "2026-03-15T16:32:00Z",
+      "concierge_notified_at": "2026-03-15T16:43:00Z",
+      "concierge_ref": "73559",
+      "picked_up": false,
+      "picked_up_at": null,
+      "live_status": null,
+      "live_status_checked_at": null,
+      "flags": [],
+      "notes": "Ordered and delivered same day (March 15). Amazon delivery noted 'left in mail room'. Concierge notification ref #73559 received at 12:43 PM ET. Awaiting pickup at concierge desk."
+    },
+    {
+      "id": "pkg_20260314_amazonhub_145750",
+      "retailer": "Amazon (unknown item)",
+      "description": "Unknown package at RC Amazon Locker",
+      "order_number": null,
+      "order_date": null,
+      "email_account": "official",
+      "tracking_number": null,
+      "carrier": "Amazon",
+      "tracking_url": null,
+      "status": "awaiting_pickup",
+      "pickup_location": "amazon_hub",
+      "pickup_code": "145750",
+      "link_confidence": "unlinked",
+      "retailer_delivered_at": null,
+      "concierge_notified_at": null,
+      "concierge_ref": null,
+      "picked_up": false,
+      "picked_up_at": null,
+      "live_status": null,
+      "live_status_checked_at": null,
+      "flags": ["unlinked_delivery", "overdue_pickup"],
+      "notes": "Final reminder sent 2026-03-14. Locker expires TODAY (03/16/2026) — pick up ASAP or item may be removed. No matching order found. Pickup code: 145750."
     }
   ]
 }
