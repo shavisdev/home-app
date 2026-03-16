@@ -78,23 +78,24 @@ export default function PinPage() {
 
   return (
     <div className="min-h-screen bg-stone-950 flex items-center justify-center relative overflow-hidden px-4">
-      {/* Ambient glow */}
+      {/* Ambient glow layers */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[500px] h-[500px] rounded-full bg-amber-500/8 blur-[80px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[280px] h-[280px] rounded-full bg-amber-400/6 blur-[50px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[600px] h-[600px] rounded-full bg-amber-500/18 blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] w-[300px] h-[300px] rounded-full bg-amber-400/12 blur-[55px]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[300px] rounded-full bg-orange-600/6 blur-[80px]" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-10 w-full max-w-xs animate-fade-in">
         {/* Icon + heading */}
         <div className="flex flex-col items-center gap-4 text-center animate-slide-up">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center shadow-lg shadow-amber-500/10">
-            <Home className="w-7 h-7 text-amber-400" />
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/35 flex items-center justify-center shadow-xl shadow-amber-500/20 ring-1 ring-amber-400/10 ring-offset-2 ring-offset-stone-950">
+            <Home className="w-7 h-7 text-amber-300" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-stone-100 tracking-tight">
+            <h1 className="text-2xl font-bold text-white tracking-tight">
               Welcome Home
             </h1>
-            <p className="text-sm text-stone-500 mt-1">Enter your PIN to continue</p>
+            <p className="text-sm text-stone-400 mt-1">Enter your PIN to continue</p>
           </div>
         </div>
 
@@ -108,11 +109,11 @@ export default function PinPage() {
                 className={`w-3 h-3 rounded-full transition-all duration-200 ${
                   filled
                     ? isError
-                      ? 'bg-red-500 scale-110 shadow-lg shadow-red-500/40'
+                      ? 'bg-red-400 scale-110 shadow-lg shadow-red-400/50'
                       : isSuccess
-                      ? 'bg-emerald-400 scale-110 shadow-lg shadow-emerald-400/40'
-                      : 'bg-amber-400 scale-110 shadow-lg shadow-amber-400/30'
-                    : 'bg-stone-700'
+                      ? 'bg-emerald-400 scale-110 shadow-lg shadow-emerald-400/50'
+                      : 'bg-amber-400 scale-110 shadow-lg shadow-amber-400/40'
+                    : 'bg-stone-600'
                 }`}
               />
             );
@@ -133,7 +134,7 @@ export default function PinPage() {
                   onClick={handleDelete}
                   disabled={pin.length === 0 || isError || isSuccess}
                   aria-label="Delete"
-                  className="h-16 rounded-2xl bg-stone-800/60 border border-stone-700/40 text-stone-400 flex items-center justify-center active:scale-95 transition-all duration-100 hover:bg-stone-700/60 hover:text-stone-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="h-16 rounded-2xl bg-stone-800/80 border border-stone-700/60 text-stone-300 flex items-center justify-center active:scale-95 transition-all duration-100 hover:bg-stone-700/80 hover:text-stone-100 disabled:opacity-25 disabled:cursor-not-allowed"
                 >
                   <Delete className="w-5 h-5" />
                 </button>
@@ -145,7 +146,7 @@ export default function PinPage() {
                 key={i}
                 onClick={() => handleDigit(btn)}
                 disabled={isError || isSuccess}
-                className="h-16 rounded-2xl bg-stone-800/60 border border-stone-700/40 text-stone-100 text-xl font-medium active:scale-95 transition-all duration-100 hover:bg-stone-700/60 hover:border-amber-500/30 hover:text-amber-300 disabled:cursor-not-allowed select-none"
+                className="h-16 rounded-2xl bg-stone-800/80 border border-stone-700/60 text-white text-xl font-semibold active:scale-95 transition-all duration-100 hover:bg-stone-700/80 hover:border-amber-500/40 hover:text-amber-200 disabled:cursor-not-allowed select-none shadow-sm"
               >
                 {btn}
               </button>
@@ -153,8 +154,8 @@ export default function PinPage() {
           })}
         </div>
 
-        <p className="text-stone-700 text-xs animate-slide-up-3 tracking-widest uppercase">
-          Home, Made Easy
+        <p className="text-stone-500 text-xs animate-slide-up-3 tracking-[0.2em] uppercase font-medium">
+          V · S · Home
         </p>
       </div>
     </div>

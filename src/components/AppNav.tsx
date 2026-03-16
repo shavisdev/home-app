@@ -16,9 +16,14 @@ export default function AppNav() {
     <>
       {/* Desktop top header */}
       <header className="hidden md:flex items-center justify-between px-8 py-4 border-b border-[var(--card-border)] sticky top-0 z-40 bg-[var(--background)]/90 backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🏠</span>
-          <span className="font-semibold text-[var(--foreground)] tracking-tight">Home, Made Easy</span>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center shadow-sm">
+            <Home className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+          </div>
+          <div className="flex flex-col leading-none gap-0.5">
+            <span className="font-bold text-[var(--foreground)] text-sm tracking-tight">V &amp; S</span>
+            <span className="text-[10px] text-[var(--muted)] tracking-widest uppercase">Home Hub</span>
+          </div>
         </div>
         <nav className="flex items-center gap-1">
           {navItems.map(({ href, label, icon: Icon }) => (
@@ -48,15 +53,18 @@ export default function AppNav() {
                 key={href}
                 href={href}
                 className={`flex-1 flex flex-col items-center gap-1 py-3 min-h-[56px] transition-all duration-150 ${
-                  isActive
-                    ? 'text-amber-500'
-                    : 'text-[var(--muted)]'
+                  isActive ? 'text-amber-500' : 'text-[var(--muted)]'
                 }`}
               >
-                <div className={`p-1 rounded-xl transition-all duration-150 ${isActive ? 'bg-amber-500/12' : ''}`}>
-                  <Icon className="w-5 h-5" />
+                <div className="relative flex items-center justify-center">
+                  {isActive && (
+                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-amber-500" />
+                  )}
+                  <div className={`p-1.5 rounded-xl transition-all duration-150 ${isActive ? 'bg-amber-500/15' : ''}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
                 </div>
-                <span className="text-[11px] font-medium leading-none">{label}</span>
+                <span className={`text-[11px] font-medium leading-none ${isActive ? 'font-semibold' : ''}`}>{label}</span>
               </Link>
             );
           })}
