@@ -89,8 +89,17 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Status strip — visually closes empty space */}
+      <div className="mt-8 flex items-center gap-3 px-4 py-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card)] opacity-50 select-none">
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+        <span className="text-xs text-[var(--muted)] flex-1">All systems green</span>
+        <span className="text-[11px] text-[var(--muted)] tabular-nums">
+          {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+        </span>
+      </div>
+
       {/* Footer — subtle attribution */}
-      <div className="mt-10 flex items-center justify-center gap-1.5 opacity-25 select-none">
+      <div className="mt-6 flex items-center justify-center gap-1.5 opacity-25 select-none">
         <div className="w-1 h-1 rounded-full bg-amber-500" />
         <span className="text-[11px] text-[var(--muted)] tracking-wide">Powered by Gandalf</span>
         <div className="w-1 h-1 rounded-full bg-amber-500" />
