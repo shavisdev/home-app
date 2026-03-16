@@ -1,0 +1,31 @@
+{
+  "last_updated": "2026-03-16T06:40:00Z",
+  "last_scanned_official": "2026-03-16T06:40:00Z",
+  "last_scanned_personal": "2026-03-16T06:40:00Z",
+  "packages": [
+    {
+      "id": "pkg_20260311_kegg_tracker",
+      "retailer": "Lady Technologies (kegg)",
+      "description": "kegg Fertility Tracker + Kegel Ball (Order #56926)",
+      "order_number": "56926",
+      "order_date": null,
+      "email_account": "personal",
+      "tracking_number": "1Z8X330WYN52697152",
+      "carrier": "UPS",
+      "tracking_url": "https://www.ups.com/track?tracknum=1Z8X330WYN52697152",
+      "status": "shipped",
+      "pickup_location": null,
+      "pickup_code": null,
+      "link_confidence": "high",
+      "retailer_delivered_at": null,
+      "concierge_notified_at": null,
+      "concierge_ref": null,
+      "picked_up": false,
+      "picked_up_at": null,
+      "live_status": "On the Way — Bayonne, NJ (03/16/2026 12:22 AM). Est. delivery: Wednesday, March 18 by 9:00 PM",
+      "live_status_checked_at": "2026-03-16T06:51:00Z",
+      "flags": [],
+      "notes": "Shipped March 11 from Phoenix, AZ via UPS Ground Saver. Currently in Bayonne, NJ — very close."
+    }
+  ]
+}
