@@ -10,7 +10,6 @@ import {
   ExternalLink,
   Inbox,
   Archive,
-  BadgeCheck,
   MapPin,
 } from 'lucide-react';
 import { Package as PackageType } from '@/lib/types';
@@ -83,7 +82,9 @@ function getStatusConfig(status: string) {
 }
 
 function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: boolean }) {
-  const statusCfg = getStatusConfig(pkg.status);
+  const statusCfg = pkg.picked_up
+    ? STATUS_CONFIG['picked_up']
+    : getStatusConfig(pkg.status);
   const StatusIcon = statusCfg.icon;
 
   return (
@@ -101,17 +102,11 @@ function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: b
                   {pkg.retailer}
                 </span>
               )}
-              {pkg.picked_up && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                  <BadgeCheck className="w-3 h-3" />
-                  Picked Up
-                </span>
-              )}
             </div>
             <p className="font-semibold text-[var(--foreground)] leading-snug">{pkg.description}</p>
           </div>
 
-          {/* Status badge */}
+          {/* Status badge — driven by picked_up boolean first, then status field */}
           <span
             className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 ${statusCfg.bg} ${statusCfg.text}`}
           >
