@@ -2,21 +2,6 @@
   "archived_at": "2026-03-16T01:42:00-05:00",
   "packages": [
     {
-      "id": "pkg_20260315_amazon_pureleaf",
-      "retailer": "Amazon",
-      "description": "Pure Leaf Iced Tea Variety Pack (12 bottles)",
-      "order_number": "112-6989672-7639456",
-      "email_account": "official",
-      "carrier": "Amazon",
-      "tracking_url": "https://www.amazon.com/progress-tracker/package?orderId=112-6989672-7639456&packageIndex=0",
-      "status": "picked_up",
-      "pickup_location": "concierge",
-      "concierge_ref": "73559",
-      "picked_up": true,
-      "picked_up_at": "2026-03-16T01:42:00-05:00",
-      "archived_reason": "confirmed picked up by Vishal"
-    },
-    {
       "id": "pkg_20260310_amazon_geniani",
       "retailer": "Amazon",
       "description": "GENIANI Electric Heating Pad (12x24\", Aqua Blue)",
@@ -129,7 +114,7 @@
     {
       "id": "pkg_20260308_concierge_usps_unlinked",
       "retailer": "unknown",
-      "description": "Small Box — USPS (unlinked, concierge ref #73228)",
+      "description": "Small Box \u2014 USPS (unlinked, concierge ref #73228)",
       "email_account": null,
       "carrier": "USPS",
       "concierge_ref": "73228",
@@ -142,7 +127,7 @@
     {
       "id": "pkg_20260304_concierge_dropoff_unlinked",
       "retailer": "unknown",
-      "description": "Package — Individual Drop-Off (unlinked, concierge ref #73036)",
+      "description": "Package \u2014 Individual Drop-Off (unlinked, concierge ref #73036)",
       "email_account": null,
       "carrier": "Individual Drop-Off",
       "concierge_ref": "73036",

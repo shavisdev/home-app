@@ -22,7 +22,7 @@
       "concierge_ref": null,
       "picked_up": false,
       "picked_up_at": null,
-      "live_status": "On the Way — Bayonne, NJ (03/16/2026 12:22 AM). Est. delivery: Wednesday, March 18 by 9:00 PM",
+      "live_status": "On the Way \u2014 Bayonne, NJ (03/16/2026 12:22 AM). Est. delivery: Wednesday, March 18 by 9:00 PM",
       "live_status_checked_at": "2026-03-16T13:00:00Z",
       "flags": [],
       "notes": "Shipped March 11 from Phoenix, AZ via UPS Ground Saver. Last scan: in Bayonne, NJ. UPS page is JS-rendered; live_status retained from previous check. Est. delivery Wed March 18."
@@ -44,8 +44,8 @@
       "retailer_delivered_at": "2026-03-15T16:32:00Z",
       "concierge_notified_at": "2026-03-15T16:43:00Z",
       "concierge_ref": "73559",
-      "picked_up": false,
-      "picked_up_at": null,
+      "picked_up": true,
+      "picked_up_at": "2026-03-16T15:55:00Z",
       "live_status": null,
       "live_status_checked_at": null,
       "flags": [],
@@ -68,12 +68,15 @@
       "retailer_delivered_at": null,
       "concierge_notified_at": null,
       "concierge_ref": null,
-      "picked_up": false,
-      "picked_up_at": null,
+      "picked_up": true,
+      "picked_up_at": "2026-03-16T15:55:00Z",
       "live_status": null,
       "live_status_checked_at": null,
-      "flags": ["unlinked_delivery", "overdue_pickup"],
-      "notes": "Final reminder sent 2026-03-14. Locker expires TODAY (03/16/2026) — pick up ASAP or item may be removed. No matching order found. Pickup code: 145750."
+      "flags": [
+        "unlinked_delivery",
+        "overdue_pickup"
+      ],
+      "notes": "Final reminder sent 2026-03-14. Locker expires TODAY (03/16/2026) \u2014 pick up ASAP or item may be removed. No matching order found. Pickup code: 145750."
     }
   ]
 }
