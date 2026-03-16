@@ -25,27 +25,40 @@ export default function AppNav() {
             <span className="text-[10px] text-[var(--muted)] tracking-widest uppercase">Home Hub</span>
           </div>
         </div>
-        <nav className="flex items-center gap-1">
-          {navItems.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
-                pathname === href
-                  ? 'bg-amber-500/12 text-amber-600 dark:text-amber-400'
-                  : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--muted-bg)]'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              {label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-1">
+          <nav className="flex items-center gap-1">
+            {navItems.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
+                  pathname === href
+                    ? 'bg-amber-500/12 text-amber-600 dark:text-amber-400'
+                    : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--muted-bg)]'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </Link>
+            ))}
+          </nav>
+          {/* VS avatar — household identity */}
+          <div className="ml-2 w-8 h-8 rounded-full bg-amber-500/12 border border-amber-500/25 flex items-center justify-center select-none" title="Vishal & Shreya">
+            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 tracking-tight">VS</span>
+          </div>
+        </div>
       </header>
 
       {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[var(--card)]/95 backdrop-blur-xl border-t border-[var(--card-border)]">
-        <div className="flex safe-area-inset-bottom">
+        <div className="flex items-stretch safe-area-inset-bottom">
+          {/* VS avatar — bottom-left household mark */}
+          <div className="flex flex-col items-center justify-center gap-1 pl-4 pr-3 py-3 min-h-[56px] select-none">
+            <div className="w-7 h-7 rounded-full bg-amber-500/12 border border-amber-500/25 flex items-center justify-center">
+              <span className="text-[9px] font-bold text-amber-600 dark:text-amber-400 tracking-tight">VS</span>
+            </div>
+          </div>
+          <div className="flex flex-1">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
@@ -68,6 +81,7 @@ export default function AppNav() {
               </Link>
             );
           })}
+          </div>
         </div>
       </nav>
     </>

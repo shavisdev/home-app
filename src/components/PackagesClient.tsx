@@ -29,9 +29,9 @@ const STATUS_CONFIG: Record<
   shipped: {
     label: 'Shipped',
     icon: Truck,
-    bg: 'bg-blue-500/10 dark:bg-blue-500/15',
-    text: 'text-blue-600 dark:text-blue-400',
-    dot: 'bg-blue-500',
+    bg: 'bg-amber-500/10 dark:bg-amber-500/15',
+    text: 'text-amber-600 dark:text-amber-400',
+    dot: 'bg-amber-500',
   },
   out_for_delivery: {
     label: 'Out for Delivery',

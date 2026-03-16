@@ -22,16 +22,20 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12">
-      {/* Hero greeting section */}
-      <div className="relative mb-12 animate-fade-in">
-        {/* Warm ambient glow behind greeting */}
-        <div className="absolute -inset-x-4 -inset-y-4 md:-inset-x-6 rounded-3xl bg-gradient-to-br from-amber-500/[0.07] via-amber-500/[0.02] to-transparent dark:from-amber-500/[0.09] dark:via-amber-500/[0.03] pointer-events-none" />
-        <div className="relative flex items-start justify-between">
-          <Greeting />
-          {/* V·S monogram — bespoke personal accent */}
-          <div className="flex-shrink-0 ml-4 mt-1 flex flex-col items-center gap-1 opacity-40 dark:opacity-30 select-none">
-            <div className="w-9 h-9 rounded-full border border-amber-500/50 dark:border-amber-400/40 flex items-center justify-center">
-              <span className="text-[11px] font-bold tracking-tight text-amber-600 dark:text-amber-400">V·S</span>
+      {/* Hero greeting section — warm card */}
+      <div className="relative mb-7 animate-fade-in">
+        <div className="relative rounded-3xl border border-amber-500/20 dark:border-amber-500/15 overflow-hidden shadow-sm">
+          {/* Sunrise warmth gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-100/70 via-orange-50/40 to-amber-50/20 dark:from-amber-950/50 dark:via-amber-900/20 dark:to-stone-900/10" />
+          {/* Radial warm glow from top-left */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgba(251,191,36,0.18),transparent)] dark:bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgba(251,191,36,0.10),transparent)]" />
+          <div className="relative px-6 pt-7 pb-6 flex items-start justify-between">
+            <Greeting />
+            {/* V·S monogram — bespoke personal accent */}
+            <div className="flex-shrink-0 ml-4 mt-1 flex flex-col items-center gap-1 opacity-60 dark:opacity-45 select-none">
+              <div className="w-9 h-9 rounded-full border border-amber-500/40 bg-amber-500/10 flex items-center justify-center">
+                <span className="text-[11px] font-bold tracking-tight text-amber-600 dark:text-amber-400">V·S</span>
+              </div>
             </div>
           </div>
         </div>
@@ -83,6 +87,13 @@ export default function DashboardPage() {
             <p className="text-xs text-[var(--muted)] mt-0.5">Groceries, calendar, and more</p>
           </div>
         </div>
+      </div>
+
+      {/* Footer — subtle attribution */}
+      <div className="mt-10 flex items-center justify-center gap-1.5 opacity-25 select-none">
+        <div className="w-1 h-1 rounded-full bg-amber-500" />
+        <span className="text-[11px] text-[var(--muted)] tracking-wide">Powered by Gandalf</span>
+        <div className="w-1 h-1 rounded-full bg-amber-500" />
       </div>
     </div>
   );
