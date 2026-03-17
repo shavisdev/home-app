@@ -1,27 +1,28 @@
-import fs from 'fs';
-import path from 'path';
 import Link from 'next/link';
 import { Package, ChevronRight, Sparkles } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Home · V&S' };
 import Greeting from '@/components/Greeting';
-import { Package as PackageType } from '@/lib/types';
+import { createServerClient } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
-function getPackageCount(): number {
+async function getPendingPackageCount(): Promise<number> {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'packages.json');
-    const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    return (data.packages as PackageType[])?.length ?? 0;
+    const supabase = createServerClient();
+    const { count } = await supabase
+      .from('packages')
+      .select('*', { count: 'exact', head: true })
+      .is('picked_up_at', null);
+    return count ?? 0;
   } catch {
     return 0;
   }
 }
 
-export default function DashboardPage() {
-  const activeCount = getPackageCount();
+export default async function DashboardPage() {
+  const activeCount = await getPendingPackageCount();
 
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12">
