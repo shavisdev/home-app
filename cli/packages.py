@@ -5,7 +5,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
 SCHEMA_FIELDS = {
@@ -104,10 +104,13 @@ def cmd_pickup(args):
             print(f"ERROR: package {pkg_id} not found")
             sys.exit(1)
         title = result.data[0].get("title", "")
-        client.table("packages").update({
+        update_result = client.table("packages").update({
             "picked_up_at": now_utc(),
             "status": "picked_up",
         }).eq("id", pkg_id).execute()
+        if not update_result.data:
+            print(f"ERROR: failed to update package {pkg_id}")
+            sys.exit(1)
         print(f"OK picked up: {pkg_id} — {title}")
     except SystemExit:
         raise
@@ -128,16 +131,14 @@ def cmd_list(args):
             query = query.is_("picked_up_at", "null")
         elif state == "recent":
             # picked up in last 24h
-            from datetime import timedelta
             cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
             query = query.not_.is_("picked_up_at", "null").gte("picked_up_at", cutoff)
         elif state == "archived":
-            from datetime import timedelta
             cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
             query = query.not_.is_("picked_up_at", "null").lt("picked_up_at", cutoff)
         # "all": no filter
 
-        result = query.order("created_at", desc=True).execute()
+        result = query.order("created_at", desc=True).limit(500).execute()
         packages = result.data
 
         if as_json:
@@ -151,7 +152,6 @@ def cmd_list(args):
                 picked_up_at = pkg.get("picked_up_at")
 
                 if picked_up_at:
-                    from datetime import timedelta
                     try:
                         # Parse picked_up_at
                         picked_dt = datetime.fromisoformat(picked_up_at.replace("Z", "+00:00"))
@@ -180,7 +180,11 @@ def cmd_get_scan_state(args):
 
         rows = {row["account"]: row.get("last_scanned_at") for row in result.data}
 
-        accounts = [account] if account else ["official", "personal"]
+        if account:
+            accounts = [account]
+        else:
+            accounts = sorted(set(rows.keys()) | {"official", "personal"})
+
         for acc in accounts:
             ts = rows.get(acc)
             print(f"{acc}: {ts if ts else 'never'}")
