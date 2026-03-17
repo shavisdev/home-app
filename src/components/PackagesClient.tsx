@@ -16,8 +16,8 @@ import { Package as PackageType } from '@/lib/types';
 
 interface Props {
   pending: PackageType[];
-  recentlyPickedUp: PackageType[];
-  archived: PackageType[];
+  recentlyPickedUpCount: number;
+  archivedCount: number;
 }
 
 type Tab = 'pending' | 'recently_picked_up' | 'archived';
@@ -214,15 +214,88 @@ function EmptyState({ type }: { type: Tab }) {
   );
 }
 
-export default function PackagesClient({ pending, recentlyPickedUp, archived }: Props) {
-  const [tab, setTab] = useState<Tab>('pending');
+function LoadingState() {
+  return (
+    <div className="flex flex-col gap-3">
+      {[0, 1, 2].map((i) => (
+        <div
+          key={i}
+          className="relative border rounded-2xl overflow-hidden bg-[var(--card)] border-[var(--card-border)] shadow-sm"
+        >
+          <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--card-border)] animate-pulse" />
+          <div className="pl-5 pr-5 py-5 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 space-y-2">
+                <div className="h-3 w-16 rounded bg-[var(--muted-bg)] animate-pulse" />
+                <div className="h-4 w-48 rounded bg-[var(--muted-bg)] animate-pulse" />
+              </div>
+              <div className="h-6 w-20 rounded-full bg-[var(--muted-bg)] animate-pulse" />
+            </div>
+            <div className="h-3 w-32 rounded bg-[var(--muted-bg)] animate-pulse" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-  const packages = tab === 'pending' ? pending : tab === 'recently_picked_up' ? recentlyPickedUp : archived;
+export default function PackagesClient({ pending, recentlyPickedUpCount, archivedCount }: Props) {
+  const [tab, setTab] = useState<Tab>('pending');
+  const [recentlyPickedUp, setRecentlyPickedUp] = useState<PackageType[] | null>(null);
+  const [archived, setArchived] = useState<PackageType[] | null>(null);
+  const [loadingTab, setLoadingTab] = useState<Tab | null>(null);
+
+  async function handleTabClick(newTab: Tab) {
+    if (newTab === 'pending') {
+      setTab(newTab);
+      return;
+    }
+
+    if (newTab === 'recently_picked_up') {
+      if (recentlyPickedUp !== null) {
+        setTab(newTab);
+        return;
+      }
+      setLoadingTab(newTab);
+      setTab(newTab);
+      try {
+        const res = await fetch('/api/packages?state=recently_picked_up');
+        const json = await res.json();
+        setRecentlyPickedUp(json.packages ?? []);
+      } finally {
+        setLoadingTab(null);
+      }
+      return;
+    }
+
+    if (newTab === 'archived') {
+      if (archived !== null) {
+        setTab(newTab);
+        return;
+      }
+      setLoadingTab(newTab);
+      setTab(newTab);
+      try {
+        const res = await fetch('/api/packages?state=archived');
+        const json = await res.json();
+        setArchived(json.packages ?? []);
+      } finally {
+        setLoadingTab(null);
+      }
+    }
+  }
+
+  const currentList =
+    tab === 'pending'
+      ? pending
+      : tab === 'recently_picked_up'
+      ? recentlyPickedUp
+      : archived;
 
   const tabs: { id: Tab; label: string; icon: React.ElementType; count: number }[] = [
     { id: 'pending', label: 'Pending', icon: Truck, count: pending.length },
-    { id: 'recently_picked_up', label: 'Recently Picked Up', icon: Inbox, count: recentlyPickedUp.length },
-    { id: 'archived', label: 'Archived', icon: Archive, count: archived.length },
+    { id: 'recently_picked_up', label: 'Recently Picked Up', icon: Inbox, count: recentlyPickedUpCount },
+    { id: 'archived', label: 'Archived', icon: Archive, count: archivedCount },
   ];
 
   return (
@@ -244,7 +317,7 @@ export default function PackagesClient({ pending, recentlyPickedUp, archived }: 
         {tabs.map((t) => (
           <button
             key={t.id}
-            onClick={() => setTab(t.id)}
+            onClick={() => handleTabClick(t.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
               tab === t.id
                 ? 'bg-[var(--foreground)] text-[var(--card)] shadow-sm'
@@ -272,11 +345,13 @@ export default function PackagesClient({ pending, recentlyPickedUp, archived }: 
 
       {/* Package list */}
       <div className="animate-slide-up-1">
-        {packages.length === 0 ? (
+        {loadingTab === tab ? (
+          <LoadingState />
+        ) : currentList === null || currentList.length === 0 ? (
           <EmptyState type={tab} />
         ) : (
           <div className="flex flex-col gap-3">
-            {packages.map((pkg, i) => (
+            {currentList.map((pkg, i) => (
               <div
                 key={pkg.id}
                 style={{ animationDelay: `${i * 0.06}s` }}
@@ -289,7 +364,7 @@ export default function PackagesClient({ pending, recentlyPickedUp, archived }: 
         )}
 
         {/* Pending tab footer */}
-        {tab === 'pending' && packages.length > 0 && (
+        {tab === 'pending' && pending.length > 0 && (
           <div className="mt-8 flex flex-col items-center gap-2 select-none">
             <div className="w-full h-px bg-[var(--card-border)]/60" />
             <p className="text-xs text-[var(--muted)] opacity-50 pt-1">

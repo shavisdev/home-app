@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import PackagesClient from '@/components/PackagesClient';
-import { Package, getPackageState } from '@/lib/types';
+import { Package } from '@/lib/types';
 import { createServerClient } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
@@ -8,23 +8,34 @@ export const metadata: Metadata = { title: 'Packages · V&S' };
 
 export default async function PackagesPage() {
   const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from('packages')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-  const packages: Package[] = error || !data ? [] : data;
+  const [pendingResult, recentCountResult, archivedCountResult] = await Promise.all([
+    supabase
+      .from('packages')
+      .select('*')
+      .is('picked_up_at', null)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('packages')
+      .select('*', { count: 'exact', head: true })
+      .gt('picked_up_at', cutoff),
+    supabase
+      .from('packages')
+      .select('*', { count: 'exact', head: true })
+      .not('picked_up_at', 'is', null)
+      .lte('picked_up_at', cutoff),
+  ]);
 
-  const pending: Package[] = [];
-  const recentlyPickedUp: Package[] = [];
-  const archived: Package[] = [];
+  const pending: Package[] = pendingResult.data ?? [];
+  const recentlyPickedUpCount = recentCountResult.count ?? 0;
+  const archivedCount = archivedCountResult.count ?? 0;
 
-  for (const pkg of packages) {
-    const state = getPackageState(pkg);
-    if (state === 'pending') pending.push(pkg);
-    else if (state === 'recently_picked_up') recentlyPickedUp.push(pkg);
-    else archived.push(pkg);
-  }
-
-  return <PackagesClient pending={pending} recentlyPickedUp={recentlyPickedUp} archived={archived} />;
+  return (
+    <PackagesClient
+      pending={pending}
+      recentlyPickedUpCount={recentlyPickedUpCount}
+      archivedCount={archivedCount}
+    />
+  );
 }
