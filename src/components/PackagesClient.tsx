@@ -15,11 +15,12 @@ import {
 import { Package as PackageType } from '@/lib/types';
 
 interface Props {
-  active: PackageType[];
+  pending: PackageType[];
+  recentlyPickedUp: PackageType[];
   archived: PackageType[];
 }
 
-type Tab = 'active' | 'archived';
+type Tab = 'pending' | 'recently_picked_up' | 'archived';
 
 const STATUS_CONFIG: Record<
   string,
@@ -82,7 +83,7 @@ function getStatusConfig(status: string) {
 }
 
 function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: boolean }) {
-  const statusCfg = pkg.picked_up
+  const statusCfg = pkg.picked_up_at != null
     ? STATUS_CONFIG['picked_up']
     : getStatusConfig(pkg.status);
   const StatusIcon = statusCfg.icon;
@@ -103,10 +104,10 @@ function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: b
                 </span>
               )}
             </div>
-            <p className="font-semibold text-[var(--foreground)] leading-snug">{pkg.description}</p>
+            <p className="font-semibold text-[var(--foreground)] leading-snug">{pkg.title}</p>
           </div>
 
-          {/* Status badge — driven by picked_up boolean first, then status field */}
+          {/* Status badge — driven by picked_up_at first, then status field */}
           <span
             className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 ${statusCfg.bg} ${statusCfg.text}`}
           >
@@ -186,32 +187,43 @@ function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: b
 }
 
 function EmptyState({ type }: { type: Tab }) {
-  const isActive = type === 'active';
+  const isPending = type === 'pending';
+  const isRecent = type === 'recently_picked_up';
   return (
-    <div className={`flex flex-col items-center justify-center py-16 text-center px-4 rounded-2xl ${isActive ? 'bg-amber-500/5 border border-amber-500/12 dark:bg-amber-500/8' : ''}`}>
-      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-sm ${isActive ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-[var(--muted-bg)] border border-[var(--card-border)]'}`}>
-        {isActive ? (
+    <div className={`flex flex-col items-center justify-center py-16 text-center px-4 rounded-2xl ${isPending ? 'bg-amber-500/5 border border-amber-500/12 dark:bg-amber-500/8' : ''}`}>
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-sm ${isPending ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-[var(--muted-bg)] border border-[var(--card-border)]'}`}>
+        {isPending ? (
           <Package className="w-7 h-7 text-amber-500" />
+        ) : isRecent ? (
+          <Inbox className="w-7 h-7 text-[var(--muted)]" />
         ) : (
           <Archive className="w-7 h-7 text-[var(--muted)]" />
         )}
       </div>
       <h3 className="font-semibold text-[var(--foreground)] mb-1.5">
-        {isActive ? 'No packages in transit' : 'No archived packages'}
+        {isPending ? 'No packages in transit' : isRecent ? 'Nothing picked up recently' : 'No archived packages'}
       </h3>
       <p className="text-sm text-[var(--muted)] max-w-xs leading-relaxed">
-        {isActive
+        {isPending
           ? "When something ships, it'll appear here."
-          : 'Picked up and delivered packages will appear here.'}
+          : isRecent
+          ? 'Packages picked up in the last 24h appear here before moving to archived.'
+          : 'Packages move here after 24h.'}
       </p>
     </div>
   );
 }
 
-export default function PackagesClient({ active, archived }: Props) {
-  const [tab, setTab] = useState<Tab>('active');
+export default function PackagesClient({ pending, recentlyPickedUp, archived }: Props) {
+  const [tab, setTab] = useState<Tab>('pending');
 
-  const packages = tab === 'active' ? active : archived;
+  const packages = tab === 'pending' ? pending : tab === 'recently_picked_up' ? recentlyPickedUp : archived;
+
+  const tabs: { id: Tab; label: string; icon: React.ElementType; count: number }[] = [
+    { id: 'pending', label: 'Pending', icon: Truck, count: pending.length },
+    { id: 'recently_picked_up', label: 'Recently Picked Up', icon: Inbox, count: recentlyPickedUp.length },
+    { id: 'archived', label: 'Archived', icon: Archive, count: archived.length },
+  ];
 
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12">
@@ -219,48 +231,39 @@ export default function PackagesClient({ active, archived }: Props) {
       <div className="mb-8 animate-fade-in">
         <h1 className="text-2xl font-bold text-[var(--foreground)] tracking-tight">Packages</h1>
         <p className="text-sm text-[var(--muted)] mt-1">
-          {active.length === 0
+          {pending.length === 0
             ? 'Nothing in transit'
-            : active.length === 1
+            : pending.length === 1
             ? '1 package on the way'
-            : `${active.length} packages on the way`}
+            : `${pending.length} packages on the way`}
         </p>
       </div>
 
       {/* Tabs — pill style */}
-      <div className="flex gap-2 mb-6 animate-slide-up">
-        {(['active', 'archived'] as const).map((t) => (
+      <div className="flex gap-2 mb-6 animate-slide-up flex-wrap">
+        {tabs.map((t) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
+            key={t.id}
+            onClick={() => setTab(t.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-              tab === t
+              tab === t.id
                 ? 'bg-[var(--foreground)] text-[var(--card)] shadow-sm'
                 : 'bg-[var(--muted-bg)] text-[var(--muted)] hover:text-[var(--foreground)]'
             }`}
           >
-            {t === 'active' ? (
-              <Truck className="w-3.5 h-3.5" />
-            ) : (
-              <Archive className="w-3.5 h-3.5" />
-            )}
-            {t === 'active' ? 'Active' : 'Archived'}
-            {t === 'active' && active.length > 0 && (
+            <t.icon className="w-3.5 h-3.5" />
+            {t.label}
+            {t.count > 0 && (
               <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
-                tab === 'active'
-                  ? 'bg-amber-400/25 text-amber-200'
-                  : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
-              }`}>
-                {active.length}
-              </span>
-            )}
-            {t === 'archived' && archived.length > 0 && (
-              <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
-                tab === 'archived'
-                  ? 'bg-white/15 text-white/80'
+                tab === t.id
+                  ? t.id === 'pending'
+                    ? 'bg-amber-400/25 text-amber-200'
+                    : 'bg-white/15 text-white/80'
+                  : t.id === 'pending'
+                  ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
                   : 'bg-[var(--card-border)] text-[var(--muted)]'
               }`}>
-                {archived.length}
+                {t.count}
               </span>
             )}
           </button>
@@ -285,8 +288,8 @@ export default function PackagesClient({ active, archived }: Props) {
           </div>
         )}
 
-        {/* Active tab footer — soft empty-state hint when list is short */}
-        {tab === 'active' && packages.length > 0 && (
+        {/* Pending tab footer */}
+        {tab === 'pending' && packages.length > 0 && (
           <div className="mt-8 flex flex-col items-center gap-2 select-none">
             <div className="w-full h-px bg-[var(--card-border)]/60" />
             <p className="text-xs text-[var(--muted)] opacity-50 pt-1">
