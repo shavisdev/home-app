@@ -82,7 +82,17 @@ function getStatusConfig(status: string) {
   );
 }
 
-function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: boolean }) {
+function PackageCard({
+  pkg,
+  archived = false,
+  onPickup,
+  isPickingUp = false,
+}: {
+  pkg: PackageType;
+  archived?: boolean;
+  onPickup?: () => void;
+  isPickingUp?: boolean;
+}) {
   const statusCfg = pkg.picked_up_at != null
     ? STATUS_CONFIG['picked_up']
     : getStatusConfig(pkg.status);
@@ -182,6 +192,23 @@ function PackageCard({ pkg, archived = false }: { pkg: PackageType; archived?: b
           </div>
         )}
       </div>
+
+      {/* Mark as Picked Up button — only on pending tab */}
+      {onPickup && (
+        <>
+          <div className="mx-5 h-px bg-[var(--card-border)]/60" />
+          <div className="px-5 py-3">
+            <button
+              onClick={onPickup}
+              disabled={isPickingUp}
+              className="flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 border border-emerald-500/30 bg-emerald-500/8 hover:bg-emerald-500/15 rounded-xl px-3 py-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {isPickingUp ? 'Marking…' : 'Mark as Picked Up'}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -241,9 +268,34 @@ function LoadingState() {
 
 export default function PackagesClient({ pending, recentlyPickedUpCount, archivedCount }: Props) {
   const [tab, setTab] = useState<Tab>('pending');
+  const [pendingList, setPendingList] = useState<PackageType[]>(pending);
+  const [recentCount, setRecentCount] = useState(recentlyPickedUpCount);
   const [recentlyPickedUp, setRecentlyPickedUp] = useState<PackageType[] | null>(null);
   const [archived, setArchived] = useState<PackageType[] | null>(null);
   const [loadingTab, setLoadingTab] = useState<Tab | null>(null);
+  const [pickingUp, setPickingUp] = useState<string | null>(null);
+
+  async function handlePickup(id: string) {
+    const pkg = pendingList.find((p) => p.id === id);
+    setPickingUp(id);
+    try {
+      const res = await fetch(`/api/packages/${id}/pickup`, { method: 'POST' });
+      if (!res.ok) {
+        console.error('Pickup failed', await res.json());
+        return;
+      }
+      setPendingList((prev) => prev.filter((p) => p.id !== id));
+      setRecentCount((c) => c + 1);
+      if (recentlyPickedUp !== null && pkg) {
+        setRecentlyPickedUp((prev) => [
+          { ...pkg, picked_up_at: new Date().toISOString(), status: 'picked_up' },
+          ...(prev ?? []),
+        ]);
+      }
+    } finally {
+      setPickingUp(null);
+    }
+  }
 
   async function handleTabClick(newTab: Tab) {
     if (newTab === 'pending') {
@@ -287,14 +339,14 @@ export default function PackagesClient({ pending, recentlyPickedUpCount, archive
 
   const currentList =
     tab === 'pending'
-      ? pending
+      ? pendingList
       : tab === 'recently_picked_up'
       ? recentlyPickedUp
       : archived;
 
   const tabs: { id: Tab; label: string; icon: React.ElementType; count: number }[] = [
-    { id: 'pending', label: 'Pending', icon: Truck, count: pending.length },
-    { id: 'recently_picked_up', label: 'Recently Picked Up', icon: Inbox, count: recentlyPickedUpCount },
+    { id: 'pending', label: 'Pending', icon: Truck, count: pendingList.length },
+    { id: 'recently_picked_up', label: 'Recently Picked Up', icon: Inbox, count: recentCount },
     { id: 'archived', label: 'Archived', icon: Archive, count: archivedCount },
   ];
 
@@ -304,11 +356,11 @@ export default function PackagesClient({ pending, recentlyPickedUpCount, archive
       <div className="mb-8 animate-fade-in">
         <h1 className="text-2xl font-bold text-[var(--foreground)] tracking-tight">Packages</h1>
         <p className="text-sm text-[var(--muted)] mt-1">
-          {pending.length === 0
+          {pendingList.length === 0
             ? 'Nothing in transit'
-            : pending.length === 1
+            : pendingList.length === 1
             ? '1 package on the way'
-            : `${pending.length} packages on the way`}
+            : `${pendingList.length} packages on the way`}
         </p>
       </div>
 
@@ -357,14 +409,19 @@ export default function PackagesClient({ pending, recentlyPickedUpCount, archive
                 style={{ animationDelay: `${i * 0.06}s` }}
                 className="animate-slide-up"
               >
-                <PackageCard pkg={pkg} archived={tab === 'archived'} />
+                <PackageCard
+                  pkg={pkg}
+                  archived={tab === 'archived'}
+                  onPickup={tab === 'pending' ? () => handlePickup(pkg.id) : undefined}
+                  isPickingUp={pickingUp === pkg.id}
+                />
               </div>
             ))}
           </div>
         )}
 
         {/* Pending tab footer */}
-        {tab === 'pending' && pending.length > 0 && (
+        {tab === 'pending' && pendingList.length > 0 && (
           <div className="mt-8 flex flex-col items-center gap-2 select-none">
             <div className="w-full h-px bg-[var(--card-border)]/60" />
             <p className="text-xs text-[var(--muted)] opacity-50 pt-1">
